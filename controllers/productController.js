@@ -1,6 +1,7 @@
 import slugify from "slugify";
 import productModel from "../models/productModel.js";
 import fs from "fs";
+import categoryModel from "../models/categoryModel.js";
 
 export const createProductController = async (req, res) => {
   try {
@@ -49,16 +50,27 @@ export const createProductController = async (req, res) => {
 // get all product
 export const getProductController = async (req, res) => {
   try {
+    const perPage = 2;
+    const page = req.query.page ? req.query.page : 1;
+    const { checked, radio } = req.query;
+    console.log(req.query);
+    const radioArray = radio ? radio.split(",") : [];
+    let args = {};
+    // if (checked.length > 0) args.category = checked;
+    if (radioArray.length)
+      args.price = { $gte: radioArray[0], $lte: radioArray[1] };
+
     const products = await productModel
-      .find({})
-      .populate("category")
+      .find(args)
       .select("-photo")
-      .limit(12)
+      .skip((page - 1) * perPage)
+      .limit(perPage)
       .sort({ createdAt: -1 });
+    const total = await productModel.estimatedDocumentCount();
     res.status(200).send({
       success: true,
-      countTotal: products.length,
-      message: "Allproducts",
+      countTotal: total,
+      message: "All products",
       products,
     });
   } catch (error) {
@@ -173,6 +185,140 @@ export const updateProductController = async (req, res) => {
       success: false,
       error,
       message: "Error in updating product",
+    });
+  }
+};
+
+//filter
+export const productFiltersController = async (req, res) => {
+  try {
+    const { checked, radio } = req.body;
+    let args = {};
+    if (checked.length > 0) args.category = checked;
+    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
+    const products = await productModel.find(args);
+    res.status(200).send({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error while filtering product",
+      error,
+    });
+  }
+};
+
+//product count
+export const productCountController = async (req, res) => {
+  try {
+    const total = await productModel.find({}).estimatedDocumentCount();
+    res.status(200).send({
+      success: true,
+      total,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      message: "Error in product count",
+      error,
+      success: false,
+    });
+  }
+};
+
+//product list
+export const productListController = async (req, res) => {
+  try {
+    const perPage = 2;
+    const page = req.params.page ? req.params.page : 1;
+    const products = await productModel
+      .find({})
+      .select("-photo")
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .sort({ createdAt: -1 });
+    res.status(200).send({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "error in page control",
+      error,
+    });
+  }
+};
+
+//search Product
+export const searchProductController = async (req, res) => {
+  try {
+    const { keyword } = req.params;
+    const results = await productModel
+      .find({
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .select("-photo");
+    res.json(results);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error in search product",
+      error,
+    });
+  }
+};
+
+//related product
+export const relatedProductController = async (req, res) => {
+  try {
+    const { pid, cid } = req.params;
+    const products = await productModel
+      .find({
+        category: cid,
+        _id: { $ne: pid },
+      })
+      .select("-photo")
+      .limit(3)
+      .populate("category");
+    res.status(200).send({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: true,
+      message: "error while getting related product",
+      error,
+    });
+  }
+};
+
+//get product by category
+export const productCategoryController = async (req, res) => {
+  try {
+    const category = await categoryModel.findOne({ slug: req.params.slug });
+    const products = await productModel.find({ category }).populate("category");
+    res.status(200).send({
+      success: true,
+      category,
+      products,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      error,
+      message: "Error while getting product",
     });
   }
 };
