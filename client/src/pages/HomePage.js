@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import apiService from "../app/apiService";
 import { useCart } from "../context/cart";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const HomePage = () => {
       if (radio.length) {
         url += `&radio=${radio}`;
       }
-      const { data } = await apiService.get(url);
+      const { data } = await axios.get(url);
       setLoading(false);
       setProducts([...products, ...data.products]);
       setTotal(data.countTotal);
@@ -173,7 +174,11 @@ const HomePage = () => {
                     className="btn btn-secondary ms-1"
                     onClick={() => {
                       setCart([...cart, p]);
-                      toast.success("item added");
+                      localStorage.setItem(
+                        "cart",
+                        JSON.stringify([...cart, p])
+                      );
+                      toast.success("Item added");
                     }}
                   >
                     Add to cart
