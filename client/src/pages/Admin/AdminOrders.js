@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import AdminMenu from "../../components/Layout/AdminMenu";
 import Layout from "../../components/Layout/Layout";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
 import { Select } from "antd";
-
 const { Option } = Select;
 
 const AdminOrders = () => {
@@ -13,13 +13,12 @@ const AdminOrders = () => {
     "Not Process",
     "Processing",
     "Shipped",
-    "Deliver",
-    "Cancel",
+    "deliverd",
+    "cancel",
   ]);
-  const [changeStatus, setChangeStatus] = useState("");
+  const [changeStatus, setCHangeStatus] = useState("");
   const [orders, setOrders] = useState([]);
   const [auth, setAuth] = useAuth();
-
   const getOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/auth/all-orders");
@@ -43,10 +42,9 @@ const AdminOrders = () => {
       console.log(error);
     }
   };
-
   return (
     <Layout title={"All Orders Data"}>
-      <div className="row">
+      <div className="row dashboard">
         <div className="col-md-3">
           <AdminMenu />
         </div>
@@ -61,7 +59,7 @@ const AdminOrders = () => {
                       <th scope="col">#</th>
                       <th scope="col">Status</th>
                       <th scope="col">Buyer</th>
-                      <th scope="col">Date</th>
+                      <th scope="col"> date</th>
                       <th scope="col">Payment</th>
                       <th scope="col">Quantity</th>
                     </tr>
@@ -71,7 +69,7 @@ const AdminOrders = () => {
                       <td>{i + 1}</td>
                       <td>
                         <Select
-                          variant={false}
+                          bordered={false}
                           onChange={(value) => handleChange(o._id, value)}
                           defaultValue={o?.status}
                         >
@@ -91,7 +89,7 @@ const AdminOrders = () => {
                 </table>
                 <div className="container">
                   {o?.products?.map((p, i) => (
-                    <div className="row mb-2 card flex-row">
+                    <div className="row mb-2 p-3 card flex-row" key={p._id}>
                       <div className="col-md-4">
                         <img
                           src={`/api/v1/product/product-photo/${p._id}`}
@@ -102,9 +100,9 @@ const AdminOrders = () => {
                         />
                       </div>
                       <div className="col-md-8">
-                        <h4> {p.name}</h4>
+                        <p>{p.name}</p>
                         <p>{p.description.substring(0, 30)}</p>
-                        <h4>Price: {p.price}</h4>
+                        <p>Price : {p.price} USD</p>
                       </div>
                     </div>
                   ))}

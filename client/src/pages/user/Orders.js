@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../../components/Layout/Layout";
 import UserMenu from "../../components/Layout/UserMenu";
+import Layout from "./../../components/Layout/Layout";
 import axios from "axios";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
@@ -8,7 +8,6 @@ import moment from "moment";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [auth, setAuth] = useAuth();
-
   const getOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/auth/orders");
@@ -21,10 +20,9 @@ const Orders = () => {
   useEffect(() => {
     if (auth?.token) getOrders();
   }, [auth?.token]);
-
   return (
     <Layout title={"Your Orders"}>
-      <div className="container-fluid p-3 m-3">
+      <div className="container-flui p-3 m-3 dashboard">
         <div className="row">
           <div className="col-md-3">
             <UserMenu />
@@ -40,7 +38,7 @@ const Orders = () => {
                         <th scope="col">#</th>
                         <th scope="col">Status</th>
                         <th scope="col">Buyer</th>
-                        <th scope="col">Date</th>
+                        <th scope="col"> date</th>
                         <th scope="col">Payment</th>
                         <th scope="col">Quantity</th>
                       </tr>
@@ -58,7 +56,7 @@ const Orders = () => {
                   </table>
                   <div className="container">
                     {o?.products?.map((p, i) => (
-                      <div className="row mb-2 card flex-row">
+                      <div className="row mb-2 p-3 card flex-row" key={p._id}>
                         <div className="col-md-4">
                           <img
                             src={`/api/v1/product/product-photo/${p._id}`}
@@ -69,9 +67,9 @@ const Orders = () => {
                           />
                         </div>
                         <div className="col-md-8">
-                          <h4> {p.name}</h4>
+                          <p>{p.name}</p>
                           <p>{p.description.substring(0, 30)}</p>
-                          <h4>Price: {p.price}</h4>
+                          <p>Price : {p.price} USD</p>
                         </div>
                       </div>
                     ))}
