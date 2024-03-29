@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/auth";
 import { SearchProvider } from "./context/search";
