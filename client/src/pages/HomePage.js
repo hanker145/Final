@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox, Radio } from "antd";
 import { Prices } from "../components/Prices";
 import { useCart } from "../context/cart";
-import axios from "axios";
+
 import toast from "react-hot-toast";
 import Layout from "./../components/Layout/Layout";
 import { AiOutlineReload } from "react-icons/ai";
@@ -105,10 +105,13 @@ const HomePage = () => {
   //get filterd product
   const filterProduct = async () => {
     try {
-      const { data } = await axios.post("/api/v1/product/product-filters", {
-        checked,
-        radio,
-      });
+      const { data } = await apiService.post(
+        "/api/v1/product/product-filters",
+        {
+          checked,
+          radio,
+        }
+      );
       setProducts(data?.products);
     } catch (error) {
       console.log(error);
