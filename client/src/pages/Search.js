@@ -3,6 +3,7 @@ import Layout from "../components/Layout/Layout";
 import { useSearch } from "../context/search";
 
 const Search = () => {
+  // eslint-disable-next-line
   const [values, setValues] = useSearch();
   return (
     <Layout title={"Search results"}>

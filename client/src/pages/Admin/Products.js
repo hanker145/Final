@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import AdminMenu from "../../components/Layout/AdminMenu";
 import Layout from "./../../components/Layout/Layout";
 import axios from "axios";
-import toast from "react-hot-toast";
+
 import { Link } from "react-router-dom";
 const Products = () => {
   const [products, setProducts] = useState([]);
+  // eslint-disable-next-line
   const [checked, setChecked] = useState([]);
+  // eslint-disable-next-line
   const [radio, setRadio] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -39,7 +41,8 @@ const Products = () => {
   //lifecycle method
   useEffect(() => {
     getAllProducts();
-  }, [page, checked.length, radio.length]);
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Layout>

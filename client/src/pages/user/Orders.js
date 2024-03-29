@@ -7,6 +7,7 @@ import moment from "moment";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  // eslint-disable-next-line
   const [auth, setAuth] = useAuth();
   const getOrders = async () => {
     try {

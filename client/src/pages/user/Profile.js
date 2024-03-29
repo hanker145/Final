@@ -15,7 +15,7 @@ const Profile = () => {
     address: "",
     answer: "",
   });
-
+  // eslint-disable-next-line
   const navigate = useNavigate();
   const [auth, setAuth] = useAuth();
 
