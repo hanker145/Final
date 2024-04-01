@@ -107,3 +107,23 @@
     text-decoration:none !important;
    color: black !important;
 }
+.dashboard {
+    margin-top: 100px !important;
+  }
+  
+  .dashboard-menu h4 {
+    background-color: #434343 !important;
+    color: white;
+    padding: 20px 0px;
+  }
+
+  .cat-btn {
+    background-color: hsl(205, 65%, 42%);
+    padding: 40px 0px;
+    font-size: 24px;
+    text-transform: uppercase;
+  }
+  .cat-btn:hover {
+    background-color: hwb(247 15% 31%);
+    color: rgb(206, 216, 216);
+  }

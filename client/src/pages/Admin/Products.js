@@ -38,6 +38,24 @@ const Products = () => {
     }
   };
 
+  //load more
+  const loadMore = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
+      setLoading(false);
+      setProducts([...products, ...data?.products]);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (page === 1) return;
+    loadMore();
+    // eslint-disable-next-line
+  }, [page]);
+
   //lifecycle method
   useEffect(() => {
     getAllProducts();
@@ -46,8 +64,8 @@ const Products = () => {
 
   return (
     <Layout>
-      <div className="row">
-        <div className="col-md-3">
+      <div className="row dashboard">
+        <div className="col-md-3 ">
           <AdminMenu />
         </div>
         <div className="col-md-9 ">
