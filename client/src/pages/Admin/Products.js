@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import AdminMenu from "../../components/Layout/AdminMenu";
 import Layout from "./../../components/Layout/Layout";
-import axios from "axios";
+// import axios from "axios";
+import apiService from "../../app/apiService";
 
 import { Link } from "react-router-dom";
 const Products = () => {
@@ -28,7 +29,7 @@ const Products = () => {
       if (radio.length) {
         url += `&radio=${radio}`;
       }
-      const { data } = await axios.get(url);
+      const { data } = await apiService.get(url);
       setLoading(false);
       setProducts([...products, ...data.products]);
       setTotal(data.countTotal);
@@ -42,7 +43,9 @@ const Products = () => {
   const loadMore = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
+      const { data } = await apiService.get(
+        `/api/v1/product/product-list/${page}`
+      );
       setLoading(false);
       setProducts([...products, ...data?.products]);
     } catch (error) {
