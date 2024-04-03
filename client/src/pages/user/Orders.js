@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import UserMenu from "../../components/Layout/UserMenu";
 import Layout from "./../../components/Layout/Layout";
-import axios from "axios";
+import apiService from "../../app/apiService";
 import { useAuth } from "../../context/auth";
 import moment from "moment";
 
@@ -11,7 +11,7 @@ const Orders = () => {
   const [auth, setAuth] = useAuth();
   const getOrders = async () => {
     try {
-      const { data } = await axios.get("/api/v1/auth/orders");
+      const { data } = await apiService.get("/api/v1/auth/orders");
       setOrders(data);
     } catch (error) {
       console.log(error);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout";
 import UserMenu from "../../components/Layout/UserMenu";
-import axios from "axios";
+import apiService from "../../app/apiService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth";
@@ -22,7 +22,7 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.put(
+      const { data } = await apiService.put(
         `${process.env.REACT_APP_API}/api/v1/auth/profile`,
         values
       );

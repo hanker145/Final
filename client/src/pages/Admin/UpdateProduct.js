@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import Layout from "./../../components/Layout/Layout";
 import AdminMenu from "./../../components/Layout/AdminMenu";
 import toast from "react-hot-toast";
-import axios from "axios";
+//
+import apiService from "../../app/apiService";
 import { Select } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 const { Option } = Select;
@@ -23,7 +24,7 @@ const UpdateProduct = () => {
   //get single product
   const getSingleProduct = async () => {
     try {
-      const { data } = await axios.get(
+      const { data } = await apiService.get(
         `/api/v1/product/get-product/${params.slug}`
       );
       setName(data.product.name);
@@ -45,7 +46,7 @@ const UpdateProduct = () => {
   //get all category
   const getAllCategory = async () => {
     try {
-      const { data } = await axios.get("/api/v1/category/get-category");
+      const { data } = await apiService.get("/api/v1/category/get-category");
       if (data?.success) {
         setCategories(data?.category);
       }
@@ -70,7 +71,7 @@ const UpdateProduct = () => {
       productData.append("quantity", quantity);
       photo && productData.append("photo", photo);
       productData.append("category", category);
-      const { data } = axios.put(
+      const { data } = apiService.put(
         `/api/v1/product/update-product/${id}`,
         productData
       );
@@ -92,7 +93,7 @@ const UpdateProduct = () => {
       let answer = window.prompt("Are You Sure want to delete this product ? ");
       if (!answer) return;
       // eslint-disable-next-line
-      const { data } = await axios.delete(
+      const { data } = await apiService.delete(
         `/api/v1/product/delete-product/${id}`
       );
       toast.success("Product DEleted Succfully");

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "./../components/Layout/Layout";
-import axios from "axios";
+import apiService from "../app/apiService";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/ProductDetailsStyles.css";
 
@@ -18,7 +18,7 @@ const ProductDetails = () => {
   //getProduct
   const getProduct = async () => {
     try {
-      const { data } = await axios.get(
+      const { data } = await apiService.get(
         `/api/v1/product/get-product/${params.slug}`
       );
       setProduct(data?.product);
@@ -30,7 +30,7 @@ const ProductDetails = () => {
   //get similar product
   const getSimilarProduct = async (pid, cid) => {
     try {
-      const { data } = await axios.get(
+      const { data } = await apiService.get(
         `/api/v1/product/related-product/${pid}/${cid}`
       );
       setRelatedProducts(data?.products);
