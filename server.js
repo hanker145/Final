@@ -7,12 +7,19 @@ import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cors from "cors";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
+
+cloudinary.config({
+  cloud_name: "dlbfxkof2",
+  api_key: "436857447829554",
+  api_secret: "fo2ZzHOQ9li9_-L9EF36-QJ2dzQ",
+});
 
 app.use(cors());
 app.use(express.json());

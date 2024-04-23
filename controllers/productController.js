@@ -5,6 +5,7 @@ import categoryModel from "../models/categoryModel.js";
 import orderModel from "../models/orderModel.js";
 import braintree from "braintree";
 import dotenv from "dotenv";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ export const createProductController = async (req, res) => {
     const { name, slug, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
+    console.log("--------------", req.fields);
     //alidation
     switch (true) {
       case !name:
@@ -38,12 +40,20 @@ export const createProductController = async (req, res) => {
           .status(500)
           .send({ error: "Photo is required and should be less than 1mb" });
     }
+    console.log(photo);
 
-    const products = new productModel({ ...req.fields, slug: slugify(name) });
-    if (photo) {
-      products.photo.data = fs.readFileSync(photo.path);
-      products.photo.contentType = photo.type;
-    }
+    const result = await cloudinary.uploader.upload(photo.path, {
+      folder: "product_images",
+    });
+
+    console.log(result);
+
+    const products = new productModel({
+      ...req.fields,
+      slug: slugify(name),
+      photo: result.secure_url,
+    });
+
     await products.save();
     res.status(201).send({
       success: true,
@@ -66,7 +76,6 @@ export const getProductController = async (req, res) => {
     const perPage = 6;
     const page = req.query.page ? req.query.page : 1;
     const { checked, radio } = req.query;
-    console.log(req.query);
     const radioArray = radio ? radio.split(",") : [];
     let args = {};
     // if (checked.length > 0) args.category = checked;
@@ -75,7 +84,6 @@ export const getProductController = async (req, res) => {
 
     const products = await productModel
       .find(args)
-      .select("-photo")
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ createdAt: -1 });
@@ -100,7 +108,6 @@ export const getSingleProductController = async (req, res) => {
   try {
     const product = await productModel
       .findOne({ slug: req.params.slug })
-      .select("-photo")
       .populate("category");
     res.status(200).send({
       success: true,
@@ -119,26 +126,26 @@ export const getSingleProductController = async (req, res) => {
 
 // get photo
 export const productPhotoController = async (req, res) => {
-  try {
-    const product = await productModel.findById(req.params.pid).select("photo");
-    if (product.photo.data) {
-      res.set("Content-type", product.photo.contentType);
-      return res.status(200).send(product.photo.data);
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "Error while getting photo",
-      error,
-    });
-  }
+  // try {
+  //   const product = await productModel.findById(req.params.pid).select("photo");
+  //   if (product.photo) {
+  //     res.set("Content-type", product.photo.contentType);
+  //     return res.status(200).send(product.photo.data);
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  //   res.status(500).send({
+  //     success: false,
+  //     message: "Error while getting photo",
+  //     error,
+  //   });
+  // }
 };
 
 //delete product
 export const deleteProductController = async (req, res) => {
   try {
-    await productModel.findByIdAndDelete(req.params.pid).select("-photo");
+    await productModel.findByIdAndDelete(req.params.pid);
     res.status(200).send({
       success: true,
       message: "Product deleted successfully",
@@ -249,7 +256,6 @@ export const productListController = async (req, res) => {
     const page = req.params.page ? req.params.page : 1;
     const products = await productModel
       .find({})
-      .select("-photo")
       .skip((page - 1) * perPage)
       .limit(perPage)
       .sort({ createdAt: -1 });
@@ -271,14 +277,13 @@ export const productListController = async (req, res) => {
 export const searchProductController = async (req, res) => {
   try {
     const { keyword } = req.params;
-    const results = await productModel
-      .find({
-        $or: [
-          { name: { $regex: keyword, $options: "i" } },
-          { description: { $regex: keyword, $options: "i" } },
-        ],
-      })
-      .select("-photo");
+    const results = await productModel.find({
+      $or: [
+        { name: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ],
+    });
+
     res.json(results);
   } catch (error) {
     console.log(error);
@@ -299,7 +304,6 @@ export const relatedProductController = async (req, res) => {
         category: cid,
         _id: { $ne: pid },
       })
-      .select("-photo")
       .limit(3)
       .populate("category");
     res.status(200).send({
