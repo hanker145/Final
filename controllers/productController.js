@@ -10,7 +10,7 @@ import { v2 as cloudinary } from "cloudinary";
 dotenv.config();
 
 //payment gateway
-var gateway = new braintree.BraintreeGateway({
+const gateway = new braintree.BraintreeGateway({
   environment: braintree.Environment.Sandbox,
   merchantId: process.env.BRAINTREE_MERCHANT_ID,
   publicKey: process.env.BRAINTREE_PUBLIC_KEY,
@@ -356,9 +356,9 @@ export const braintreeTokenController = async (req, res) => {
 };
 
 //payment
-export const braintreePaymentController = async (req, res) => {
+export const brainTreePaymentController = async (req, res) => {
   try {
-    const { cart, nonce } = req.body;
+    const { nonce, cart } = req.body;
     let total = 0;
     cart.map((i) => {
       total += i.price;

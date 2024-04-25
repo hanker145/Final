@@ -4,7 +4,6 @@ import { useCart } from "../context/cart";
 import { useAuth } from "../context/auth";
 import { useNavigate } from "react-router-dom";
 import DropIn from "braintree-web-drop-in-react";
-
 import apiService from "../app/apiService";
 import toast from "react-hot-toast";
 import "../styles/CartStyles.css";
@@ -53,9 +52,7 @@ const CartPage = () => {
     try {
       const { data } = await apiService.get("/api/v1/product/braintree/token");
       setClientToken(data?.clientToken);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   useEffect(() => {
     getToken();
@@ -110,7 +107,7 @@ const CartPage = () => {
                 <div className="row card flex-row" key={p._id}>
                   <div className="col-md-4">
                     <img
-                      src={`/api/v1/product/product-photo/${p._id}`}
+                      src={p.photo}
                       className="card-img-top"
                       alt={p.name}
                       width="100%"
