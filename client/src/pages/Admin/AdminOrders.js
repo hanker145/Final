@@ -77,7 +77,7 @@ const AdminOrders = () => {
                       <td>{i + 1}</td>
                       <td>
                         <Select
-                          bordered={false}
+                          variant={false}
                           onChange={(value) => handleChange(o._id, value)}
                           defaultValue={o?.status}
                         >
@@ -100,10 +100,9 @@ const AdminOrders = () => {
                     <div className="row mb-2 p-3 card flex-row" key={p._id}>
                       <div className="col-md-4">
                         <img
-                          src={`/api/v1/product/product-photo/${p._id}`}
-                          className="card-img-top"
+                          src={p.photo}
                           alt={p.name}
-                          width="100px"
+                          width={"100px"}
                           height={"100px"}
                         />
                       </div>

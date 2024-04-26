@@ -22,7 +22,7 @@ export const createProductController = async (req, res) => {
     const { name, slug, description, price, category, quantity, shipping } =
       req.fields;
     const { photo } = req.files;
-    console.log("--------------", req.fields);
+
     //alidation
     switch (true) {
       case !name:
@@ -40,13 +40,10 @@ export const createProductController = async (req, res) => {
           .status(500)
           .send({ error: "Photo is required and should be less than 1mb" });
     }
-    console.log(photo);
 
     const result = await cloudinary.uploader.upload(photo.path, {
       folder: "product_images",
     });
-
-    console.log(result);
 
     const products = new productModel({
       ...req.fields,
@@ -129,7 +126,7 @@ export const productPhotoController = async (req, res) => {
   // try {
   //   const product = await productModel.findById(req.params.pid).select("photo");
   //   if (product.photo) {
-  //     res.set("Content-type", product.photo.contentType);
+  //     res.set(product.photo);
   //     return res.status(200).send(product.photo.data);
   //   }
   // } catch (error) {

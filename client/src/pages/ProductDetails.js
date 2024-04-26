@@ -43,9 +43,9 @@ const ProductDetails = () => {
       <div className="row container product-details">
         <div className="col-md-6">
           <img
-            src={`/api/v1/product/product-photo/${product._id}`}
+            src={product.photo}
             className="card-img-top"
-            alt={product.name}
+            alt={product.photo}
             height="300"
             width={"350px"}
           />
@@ -75,11 +75,7 @@ const ProductDetails = () => {
         <div className="d-flex flex-wrap">
           {relatedProducts?.map((p) => (
             <div className="card m-2" key={p._id}>
-              <img
-                src={`/api/v1/product/product-photo/${p._id}`}
-                className="card-img-top"
-                alt={p.name}
-              />
+              <img src={p.photo} className="card-img-top" alt={p.name} />
               <div className="card-body">
                 <div className="card-name-price">
                   <h5 className="card-title">{p.name}</h5>

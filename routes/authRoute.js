@@ -4,9 +4,9 @@ import {
   loginController,
   forgotPasswordController,
   updateProfileController,
-  getOrdersController,
   getAllOrdersController,
   orderStatusController,
+  getOrdersController,
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
