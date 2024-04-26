@@ -96,14 +96,15 @@ const AdminOrders = () => {
                   </tbody>
                 </table>
                 <div className="container">
-                  {o?.products?.map((p, i) => (
-                    <div className="row mb-2 p-3 card flex-row" key={p._id}>
+                  {o?.products.map((p, i) => (
+                    <div className="row mb-2 p-3 card flex-row" key={p.photo}>
                       <div className="col-md-4">
                         <img
                           src={p.photo}
+                          className="card-img-top"
                           alt={p.name}
-                          width={"100px"}
-                          height={"100px"}
+                          width="100px"
+                          height="100px"
                         />
                       </div>
                       <div className="col-md-8">
