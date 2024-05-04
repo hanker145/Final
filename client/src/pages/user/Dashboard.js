@@ -7,7 +7,10 @@ const Dashboard = () => {
   const [auth] = useAuth();
   return (
     <Layout title={"Dashboard - final app"}>
-      <div className="container-fluid m-3 p-3 dashboard">
+      <div
+        className="container-fluid m-3 p-3 dashboard"
+        style={{ minHeight: "90vh" }}
+      >
         <div className="row">
           <div className="col-md-3">
             <UserMenu />

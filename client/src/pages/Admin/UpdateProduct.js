@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import Layout from "./../../components/Layout/Layout";
 import AdminMenu from "./../../components/Layout/AdminMenu";
 import toast from "react-hot-toast";
-//
 import apiService from "../../app/apiService";
 import { Select } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-const { Option } = Select;
+import { Modal, Button } from "antd";
 
+const { Option } = Select;
 const UpdateProduct = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -20,6 +20,7 @@ const UpdateProduct = () => {
   const [shipping, setShipping] = useState("");
   const [photo, setPhoto] = useState("");
   const [id, setId] = useState("");
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   //get single product
   const getSingleProduct = async () => {
@@ -39,10 +40,12 @@ const UpdateProduct = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     getSingleProduct();
     //eslint-disable-next-line
   }, []);
+
   //get all category
   const getAllCategory = async () => {
     try {
@@ -90,19 +93,27 @@ const UpdateProduct = () => {
   //delete a product
   const handleDelete = async () => {
     try {
-      let answer = window.prompt("Are You Sure want to delete this product ? ");
-      if (!answer) return;
+      closeDeleteModal();
       // eslint-disable-next-line
       const { data } = await apiService.delete(
         `/api/v1/product/delete-product/${id}`
       );
-      toast.success("Product DEleted Succfully");
+      toast.success("Product Deleted Successfully");
       navigate("/dashboard/admin/products");
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
     }
   };
+
+  const showDeleteModal = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
   return (
     <Layout title={"Dashboard - Create Product"}>
       <div className="container-fluid m-3 p-3">
@@ -202,7 +213,7 @@ const UpdateProduct = () => {
               </div>
               <div className="mb-3">
                 <Select
-                  bordered={false}
+                  variant={false}
                   placeholder="Select Shipping "
                   size="large"
                   showSearch
@@ -222,10 +233,33 @@ const UpdateProduct = () => {
                 </button>
               </div>
               <div className="mb-3">
-                <button className="btn btn-danger" onClick={handleDelete}>
+                <button className="btn btn-danger" onClick={showDeleteModal}>
                   DELETE PRODUCT
                 </button>
               </div>
+              <Modal
+                title="Delete Product"
+                visible={deleteModalVisible}
+                onCancel={closeDeleteModal}
+                footer={[
+                  <Button
+                    key="cancel"
+                    className="mb-3 btn btn-primary"
+                    onClick={closeDeleteModal}
+                  >
+                    Cancel
+                  </Button>,
+                  <Button
+                    key="delete"
+                    className="mb-3 btn btn-danger"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </Button>,
+                ]}
+              >
+                <p>Are you sure you want to delete this product?</p>
+              </Modal>
             </div>
           </div>
         </div>

@@ -3,10 +3,12 @@ import Layout from "../components/Layout/Layout";
 import { useSearch } from "../context/search";
 import toast from "react-hot-toast";
 import { useCart } from "../context/cart";
+import { useNavigate } from "react-router-dom";
 const Search = () => {
   // eslint-disable-next-line
   const [values, setValues] = useSearch();
   const [cart, setCart] = useCart();
+  const navigate = useNavigate();
   return (
     <Layout title={"Search results"}>
       <div className="container">
@@ -26,8 +28,19 @@ const Search = () => {
                   <p className="card-text">
                     {p.description.substring(0, 30)}...
                   </p>
-                  <p className="card-text"> $ {p.price} </p>
-                  <button className="btn btn-primary ms-1">More Details</button>
+                  <p className="card-text">
+                    {" "}
+                    {p.price.toLocaleString("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    })}{" "}
+                  </p>
+                  <button
+                    className="btn btn-primary ms-1"
+                    onClick={() => navigate(`/product/${p.slug}`)}
+                  >
+                    More Details
+                  </button>
                   <button
                     className="btn btn-dark ms-1"
                     onClick={() => {

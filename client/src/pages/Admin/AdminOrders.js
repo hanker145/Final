@@ -61,7 +61,7 @@ const AdminOrders = () => {
           {orders?.map((o, i) => {
             return (
               <div className="border shadow">
-                <table className="table">
+                <table className="table text-center">
                   <thead>
                     <tr>
                       <th scope="col">#</th>

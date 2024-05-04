@@ -33,7 +33,7 @@ const Orders = () => {
             {orders?.map((o, i) => {
               return (
                 <div className="border shadow">
-                  <table className="table">
+                  <table className="table text-center">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -64,7 +64,7 @@ const Orders = () => {
                             className="card-img-top"
                             alt={p.photo}
                             width="100px"
-                            height={"100px"}
+                            height="200px"
                           />
                         </div>
                         <div className="col-md-8">
