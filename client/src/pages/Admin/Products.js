@@ -16,6 +16,7 @@ const Products = () => {
   const [loading, setLoading] = useState(1);
 
   //getall products
+
   const getAllProducts = async () => {
     try {
       setLoading(true);

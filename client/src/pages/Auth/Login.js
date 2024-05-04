@@ -43,7 +43,7 @@ const Login = () => {
 
   return (
     <Layout title={"Register final app"}>
-      <div className="form-container">
+      <div className="form-container " style={{ minHeight: "90vh" }}>
         <h1>LOGIN</h1>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">

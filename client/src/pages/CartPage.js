@@ -16,6 +16,8 @@ const CartPage = () => {
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  // // eslint-disable-next-line
+  // const [quantity, setQuantity] = useState(1);
 
   //total price
   // eslint-disable-next-line
@@ -23,8 +25,8 @@ const CartPage = () => {
     try {
       let total = 0;
       // eslint-disable-next-line
-      cart?.map((item) => {
-        total = total + item.price;
+      cart.forEach((item) => {
+        total += item.price * item.quantity;
       });
       return total.toLocaleString("en-US", {
         style: "currency",
@@ -34,6 +36,7 @@ const CartPage = () => {
       console.log(error);
     }
   };
+
   //detele item
   const removeCartItem = (pid) => {
     try {
@@ -45,6 +48,40 @@ const CartPage = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  //handleDecrement
+  const handleDecrement = (productId) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) => {
+        if (item._id === productId && item.quantity > 1) {
+          return {
+            ...item,
+            quantity: item.quantity - 1,
+          };
+        }
+        return item;
+      });
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
+  };
+
+  //handleIncrement
+  const handleIncrement = (productId) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.map((item) => {
+        if (item._id === productId) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        }
+        return item;
+      });
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      return updatedCart;
+    });
   };
 
   //get payment gateway token
@@ -83,7 +120,7 @@ const CartPage = () => {
   };
   return (
     <Layout>
-      <div className="cart-page ">
+      <div className=" cart-page" style={{ minHeight: "90vh" }}>
         <div className="row">
           <div className="col-md-12">
             <h1 className="text-center bg-light p-2 mb-1">
@@ -92,7 +129,7 @@ const CartPage = () => {
                 : `Hello  ${auth?.token && auth?.user?.name}`}
               <p className="text-center">
                 {cart?.length
-                  ? `You have ${cart.length} items in your cart ${
+                  ? `You Have ${cart.length} items in your cart ${
                       auth?.token ? "" : "please login to checkout !"
                     }`
                   : " Your Cart Is Empty"}
@@ -102,7 +139,7 @@ const CartPage = () => {
         </div>
         <div className="container ">
           <div className="row ">
-            <div className="col-md-7  p-0 m-0 ">
+            <div className="col-md-7  p-0 m-0">
               {cart?.map((p) => (
                 <div className="row card flex-row" key={p._id}>
                   <div className="col-md-4">
@@ -117,9 +154,37 @@ const CartPage = () => {
                   <div className="col-md-4">
                     <p>{p.name}</p>
                     <p>{p.description.substring(0, 30)}</p>
-                    <p>Price : {p.price}</p>
+                    <p>
+                      Price :{" "}
+                      {p.price.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      })}{" "}
+                    </p>
                   </div>
-                  <div className="col-md-4 cart-remove-btn">
+
+                  <div className="row col-md-4 cart-remove-btn">
+                    <div className="input-group">
+                      <button
+                        type="button"
+                        className="input-group-text"
+                        onClick={() => handleDecrement(p._id)}
+                      >
+                        -
+                      </button>
+
+                      <div className="form-control text-center">
+                        {p.quantity}
+                      </div>
+                      <button
+                        type="button"
+                        className="input-group-text"
+                        onClick={() => handleIncrement(p._id)}
+                      >
+                        +
+                      </button>
+                    </div>
+
                     <button
                       className="btn btn-danger"
                       onClick={() => removeCartItem(p._id)}
@@ -166,7 +231,7 @@ const CartPage = () => {
                         })
                       }
                     >
-                      Please Login to checkout
+                      Plase Login to checkout
                     </button>
                   )}
                 </div>

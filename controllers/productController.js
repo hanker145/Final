@@ -175,10 +175,6 @@ export const updateProductController = async (req, res) => {
         return res.status(500).send({ error: "Category is required" });
       case !quantity:
         return res.status(500).send({ error: "Quantity is required" });
-      case !photo && photo.size > 1000000:
-        return res
-          .status(500)
-          .send({ error: "Photo is required and should be less than 1mb" });
     }
 
     const products = await productModel.findByIdAndUpdate(
@@ -186,9 +182,14 @@ export const updateProductController = async (req, res) => {
       { ...req.fields, slug: slugify(name) },
       { new: true }
     );
+
     if (photo) {
-      products.photo.data = fs.readFileSync(photo.path);
-      products.photo.contentType = photo.type;
+      // products.photo.data = fs.readFileSync(photo.path);
+      // products.photo.contentType = photo.type;
+      const result = await cloudinary.uploader.upload(photo.path, {
+        folder: "product_images",
+      });
+      products.photo = result.secure_url;
     }
     await products.save();
     res.status(201).send({

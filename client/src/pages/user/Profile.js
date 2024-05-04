@@ -109,15 +109,7 @@ const Profile = () => {
                     onChange={(e) => onChangeInput("address", e.target.value)}
                   />
                 </div>
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    defaultValue={values?.answer || ""}
-                    className="form-control"
-                    placeholder="What is Your Favorite Sport ?"
-                    onChange={(e) => onChangeInput("answer", e.target.value)}
-                  />
-                </div>
+
                 <button type="submit" className="btn btn-primary">
                   Update
                 </button>

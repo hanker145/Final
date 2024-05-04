@@ -10,7 +10,6 @@ const ForgotPassword = () => {
   const [values, setValues] = useState({
     email: "",
     newpassword: "",
-    answer: "",
   });
 
   const navigate = useNavigate();
@@ -51,15 +50,7 @@ const ForgotPassword = () => {
               onChange={(e) => onChangeInput("email", e.target.value)}
             />
           </div>
-          <div className="mb-3">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter your Favortie Sport"
-              required
-              onChange={(e) => onChangeInput("answer", e.target.value)}
-            />
-          </div>
+
           <div className="mb-3">
             <input
               type="password"

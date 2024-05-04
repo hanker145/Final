@@ -1,10 +1,12 @@
 import React from "react";
 import Layout from "../components/Layout/Layout";
 import { useSearch } from "../context/search";
-
+import toast from "react-hot-toast";
+import { useCart } from "../context/cart";
 const Search = () => {
   // eslint-disable-next-line
   const [values, setValues] = useSearch();
+  const [cart, setCart] = useCart();
   return (
     <Layout title={"Search results"}>
       <div className="container">
@@ -13,7 +15,7 @@ const Search = () => {
           <h6>
             {values?.results.length < 1
               ? "No product found"
-              : `Found ${values?.results.length}`}
+              : `Found ${values?.results.length} items`}
           </h6>
           <div className="d-flex flex-wrap mt-4">
             {values?.results.map((p) => (
@@ -26,7 +28,17 @@ const Search = () => {
                   </p>
                   <p className="card-text"> $ {p.price} </p>
                   <button className="btn btn-primary ms-1">More Details</button>
-                  <button className="btn btn-secondary ms-1">
+                  <button
+                    className="btn btn-dark ms-1"
+                    onClick={() => {
+                      setCart([...cart, p]);
+                      localStorage.setItem(
+                        "cart",
+                        JSON.stringify([...cart, p])
+                      );
+                      toast.success("Item Added to cart");
+                    }}
+                  >
                     Add to cart
                   </button>
                 </div>
