@@ -244,14 +244,14 @@ const UpdateProduct = () => {
                 footer={[
                   <Button
                     key="cancel"
-                    className="mb-3 btn btn-primary"
+                    className=" btn btn-primary "
                     onClick={closeDeleteModal}
                   >
                     Cancel
                   </Button>,
                   <Button
                     key="delete"
-                    className="mb-3 btn btn-danger"
+                    className=" btn btn-danger"
                     onClick={handleDelete}
                   >
                     Delete

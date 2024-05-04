@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Layout from "./../../components/Layout/Layout";
 import AdminMenu from "./../../components/Layout/AdminMenu";
 import toast from "react-hot-toast";
-// import axios from "axios";
 import apiService from "../../app/apiService";
 import { Select } from "antd";
 
