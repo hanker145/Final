@@ -28,9 +28,7 @@ const HomePage = () => {
       if (data?.success) {
         setCategories(data?.category);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -48,7 +46,6 @@ const HomePage = () => {
       setProducts(data.products);
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -57,9 +54,7 @@ const HomePage = () => {
     try {
       const { data } = await apiService.get("/api/v1/product/product-count");
       setTotal(data?.total);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -77,20 +72,17 @@ const HomePage = () => {
       setLoading(false);
       setProducts([...products, ...data?.products]);
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };
 
   // filter by cat
   const handleFilter = (value, id) => {
-    let all = [...checked];
     if (value) {
-      all.push(id);
+      setChecked([id]);
     } else {
-      all = all.filter((c) => c !== id);
+      setChecked([]);
     }
-    setChecked(all);
   };
   useEffect(() => {
     if (!checked.length || !radio.length) getAllProducts();
@@ -113,9 +105,7 @@ const HomePage = () => {
         }
       );
       setProducts(data?.products);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return (
     <Layout title={"ALl Products - Best offers "}>
@@ -135,6 +125,7 @@ const HomePage = () => {
               <Checkbox
                 key={c._id}
                 onChange={(e) => handleFilter(e.target.checked, c._id)}
+                checked={checked.includes(c._id)}
               >
                 {c.name}
               </Checkbox>

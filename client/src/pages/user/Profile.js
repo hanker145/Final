@@ -50,8 +50,6 @@ const Profile = () => {
     setValues(user);
   }, [auth]);
 
-  console.log(auth);
-
   return (
     <Layout title={"Your Profile"}>
       <div className="container-fluid m-3 p-3">

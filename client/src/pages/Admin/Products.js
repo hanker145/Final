@@ -36,7 +36,6 @@ const Products = () => {
       setTotal(data.countTotal);
     } catch (error) {
       setLoading(false);
-      console.log(error);
     }
   };
 
@@ -50,7 +49,6 @@ const Products = () => {
       setLoading(false);
       setProducts([...products, ...data?.products]);
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };

@@ -26,9 +26,7 @@ const ProductDetails = () => {
       );
       setProduct(data?.product);
       getSimilarProduct(data?.product._id, data?.product.category._id);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   //get similar product
   const getSimilarProduct = async (pid, cid) => {
@@ -37,9 +35,7 @@ const ProductDetails = () => {
         `/api/v1/product/related-product/${pid}/${cid}`
       );
       setRelatedProducts(data?.products);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return (
     <Layout>

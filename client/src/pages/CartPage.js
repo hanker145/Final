@@ -32,9 +32,7 @@ const CartPage = () => {
         style: "currency",
         currency: "USD",
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   //detele item
@@ -45,9 +43,7 @@ const CartPage = () => {
       myCart.splice(index, 1);
       setCart(myCart);
       localStorage.setItem("cart", JSON.stringify(myCart));
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   //handleDecrement
@@ -114,7 +110,6 @@ const CartPage = () => {
       navigate("/dashboard/user/orders");
       toast.success("Payment Completed Successfully ");
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };

@@ -9,9 +9,7 @@ export default function useCategory() {
     try {
       const { data } = await apiService.get("/api/v1/category/get-category");
       setCategories(data?.category);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {

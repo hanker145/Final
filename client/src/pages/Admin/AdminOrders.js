@@ -27,9 +27,7 @@ const AdminOrders = () => {
     try {
       const { data } = await apiService.get("/api/v1/auth/all-orders");
       setOrders(data);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -46,9 +44,7 @@ const AdminOrders = () => {
         }
       );
       getOrders();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
   return (
     <Layout title={"All Orders Data"}>

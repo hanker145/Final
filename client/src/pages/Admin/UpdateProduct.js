@@ -36,9 +36,7 @@ const UpdateProduct = () => {
       setQuantity(data.product.quantity);
       setShipping(data.product.shipping);
       setCategory(data.product.category._id);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -54,7 +52,6 @@ const UpdateProduct = () => {
         setCategories(data?.category);
       }
     } catch (error) {
-      console.log(error);
       toast.error("Something wwent wrong in getting catgeory");
     }
   };
@@ -85,7 +82,6 @@ const UpdateProduct = () => {
         navigate("/dashboard/admin/products");
       }
     } catch (error) {
-      console.log(error);
       toast.error("something went wrong");
     }
   };
@@ -101,7 +97,6 @@ const UpdateProduct = () => {
       toast.success("Product Deleted Successfully");
       navigate("/dashboard/admin/products");
     } catch (error) {
-      console.log(error);
       toast.error("Something went wrong");
     }
   };
