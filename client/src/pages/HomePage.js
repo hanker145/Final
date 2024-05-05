@@ -20,6 +20,7 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [loadedProducts, setLoadedProducts] = useState([]);
 
   //get all cat
   const getAllCategory = async () => {
@@ -62,15 +63,32 @@ const HomePage = () => {
     loadMore();
     // eslint-disable-next-line
   }, [page]);
+
   //load more
   const loadMore = async () => {
     try {
       setLoading(true);
-      const { data } = await apiService.get(
-        `/api/v1/product/product-list/${page}`
-      );
+      let response;
+      if (checked.length) {
+        response = await apiService.post(
+          `/api/v1/product/product-list/${page}`,
+          { categories: checked }
+        );
+      } else {
+        response = await apiService.get(`/api/v1/product/product-list/${page}`);
+      }
       setLoading(false);
-      setProducts([...products, ...data?.products]);
+
+      // Filter out products that have already been loaded
+      const newProducts = response?.data?.products.filter(
+        (product) => !loadedProducts.includes(product._id)
+      );
+
+      setProducts([...products, ...newProducts]);
+      setLoadedProducts([
+        ...loadedProducts,
+        ...newProducts.map((product) => product._id),
+      ]);
     } catch (error) {
       setLoading(false);
     }
@@ -79,11 +97,15 @@ const HomePage = () => {
   // filter by cat
   const handleFilter = (value, id) => {
     if (value) {
-      setChecked([id]);
+      setChecked((prevChecked) => [...prevChecked, id]);
     } else {
-      setChecked([]);
+      setChecked((prevChecked) =>
+        prevChecked.filter((itemId) => itemId !== id)
+      );
+      setPage(1);
     }
   };
+
   useEffect(() => {
     if (!checked.length || !radio.length) getAllProducts();
     // eslint-disable-next-line
