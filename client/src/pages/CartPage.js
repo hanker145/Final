@@ -16,8 +16,6 @@ const CartPage = () => {
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  // // eslint-disable-next-line
-  // const [quantity, setQuantity] = useState(1);
 
   //total price
   // eslint-disable-next-line

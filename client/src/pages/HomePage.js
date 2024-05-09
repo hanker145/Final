@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox, Radio } from "antd";
 import { Prices } from "../components/Prices";
 import { useCart } from "../context/cart";
-
 import toast from "react-hot-toast";
 import Layout from "./../components/Layout/Layout";
 import { AiOutlineReload } from "react-icons/ai";
@@ -129,6 +128,36 @@ const HomePage = () => {
       setProducts(data?.products);
     } catch (error) {}
   };
+  // handleAddToCart
+  const handleAddToCart = (product) => {
+    const existingItem = cart.find((item) => item._id === product._id);
+
+    if (existingItem) {
+      // If the item already exists in the cart, increase its quantity
+      const updatedCart = cart.map((item) => {
+        if (item._id === product._id) {
+          return {
+            ...item,
+            quantity: item.quantity + 1,
+          };
+        }
+        return item;
+      });
+
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      toast.success("Quantity increased in cart");
+    } else {
+      // If the item doesn't exist in the cart, add it with quantity 1
+      setCart([...cart, { ...product, quantity: 1 }]);
+      localStorage.setItem(
+        "cart",
+        JSON.stringify([...cart, { ...product, quantity: 1 }])
+      );
+      toast.success("Item added to cart");
+    }
+  };
+
   return (
     <Layout title={"ALl Products - Best offers "}>
       {/* banner image */}
@@ -201,14 +230,7 @@ const HomePage = () => {
                     </button>
                     <button
                       className="btn btn-dark ms-1"
-                      onClick={() => {
-                        setCart([...cart, p]);
-                        localStorage.setItem(
-                          "cart",
-                          JSON.stringify([...cart, p])
-                        );
-                        toast.success("Item Added to cart");
-                      }}
+                      onClick={() => handleAddToCart(p)}
                     >
                       ADD TO CART
                     </button>
