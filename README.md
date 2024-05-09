@@ -24,5 +24,14 @@ CLOUD_PRESET = "final_app"
 - The env file is already included in the link on Github
 
 - Run `npm install`
+- Run `npm install cloudinary`
+
+## The demo web have the following features:
+- Login/Logout
+- Register, change password, search product.
+- Card/Paypal payment.
+- Upload/Delete/Update product and all of the image will be stored on Cloudinary. (only addmin account can do it)
+- Filtered by price and category.
+- Can login into admin account. (user: admin@1.com, password: 1234)
 
 The demo app is running on: https://ecommercedemotest1.netlify.app/
