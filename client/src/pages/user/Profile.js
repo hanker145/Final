@@ -13,7 +13,6 @@ const Profile = () => {
     password: "",
     phone: "",
     address: "",
-    answer: "",
   });
   // eslint-disable-next-line
   const navigate = useNavigate();
