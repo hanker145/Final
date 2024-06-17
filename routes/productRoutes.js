@@ -1,8 +1,6 @@
 import express from "express";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 import {
-  brainTreePaymentController,
-  braintreeTokenController,
   createProductController,
   deleteProductController,
   getProductController,
@@ -17,6 +15,10 @@ import {
   updateProductController,
 } from "../controllers/productController.js";
 import formidable from "express-formidable";
+import {
+  brainTreePaymentController,
+  braintreeTokenController,
+} from "../controllers/paymentController.js";
 
 const router = express.Router();
 
@@ -38,40 +40,57 @@ router.put(
   updateProductController
 );
 
-//get product
-router.get("/get-product", getProductController);
+router.post(
+  "/products",
+  requireSignIn,
+  isAdmin,
+  formidable(),
+  createProductController
+);
 
-//get single product
-router.get("/get-product/:slug", getSingleProductController);
+// Update a product
+router.put(
+  "/products/:pid",
+  requireSignIn,
+  isAdmin,
+  formidable(),
+  updateProductController
+);
 
-//get photo
-router.get("/product-photo/:pid", productPhotoController);
+// Get all products
+router.get("/products", getProductController);
 
-//delete product
-router.delete("/delete-product/:pid", deleteProductController);
+// Get a single product
+router.get("/products/:slug", getSingleProductController);
 
-//fliter product
-router.post("/product-filters", productFiltersController);
+// Get product photo
+router.get("/products/:pid/photo", productPhotoController);
 
-//product count
-router.get("/product-count", productCountController);
+// Delete a product
+router.delete("/products/:pid", deleteProductController);
 
-//product per page
-router.get("/product-list/:page", productListController);
+// Filter products
+router.post("/products/filters", productFiltersController);
 
-//search product
+// Get product count
+router.get("/products/count", productCountController);
+
+// Get paginated product list
+router.get("/products/page/:page", productListController);
+
+// Search products
 router.get("/search/:keyword", searchProductController);
 
-//similar product
-router.get("/related-product/:pid/:cid", relatedProductController);
+// Get related products
+router.get("/products/:pid/related/:cid", relatedProductController);
 
-//category wise product
-router.get("/product-category/:slug", productCategoryController);
+// Get products by category
+router.get("/products/category/:slug", productCategoryController);
 
-//payment route//token
+// Get Braintree token
 router.get("/braintree/token", braintreeTokenController);
 
-//payments
+// Process Braintree payment
 router.post("/braintree/payment", requireSignIn, brainTreePaymentController);
 
 export default router;

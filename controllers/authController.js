@@ -2,6 +2,10 @@ import { hashPassword, comparePassword } from "../helpers/authHelper.js";
 import userModel from "../models/userModel.js";
 import orderModel from "../models/orderModel.js";
 import JWT from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import bcrypt from "bcryptjs";
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 export const registerController = async (req, res) => {
   try {
@@ -61,7 +65,7 @@ export const loginController = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(404).send({
+      return res.status(401).send({
         success: false,
         message: "Invalid email or password",
       });
@@ -69,7 +73,7 @@ export const loginController = async (req, res) => {
     //check user
     const user = await userModel.findOne({ email });
     if (!user) {
-      return res.status(404).send({
+      return res.status(401).send({
         success: false,
         message: "Email is not registered",
       });
@@ -109,36 +113,90 @@ export const loginController = async (req, res) => {
 
 //forgotPasswordController
 export const forgotPasswordController = async (req, res) => {
+  const { email } = req.body;
   try {
-    const { email, newPassword } = req.body;
-    if (!email) {
-      res.status(400).send({ message: "Email is required" });
-    }
-
-    if (!newPassword) {
-      res.status(400).send({ message: "New Password is required" });
-    }
-    //check
     const user = await userModel.findOne({ email });
-    //validation
     if (!user) {
-      return res.status(404).send({
-        success: false,
-        message: "Wrong Email or Answer",
-      });
+      return res.json({ status: "User Not Exists!!" });
     }
-    const hashed = await hashPassword(newPassword);
-    await userModel.findByIdAndUpdate(user._id, { password: hashed });
-    res.status(200).send({
-      success: true,
-      message: "Password Reset Successfully",
+    const secret = JWT_SECRET + user.password;
+    const token = JWT.sign({ email: user.email, id: user._id }, secret, {
+      expiresIn: "5m",
     });
+    const link = `${process.env.API_HOST}/reset-password/${user._id}/${token}`;
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.USER_EMAIL,
+        pass: process.env.USER_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.USER_EMAIL,
+      to: email,
+      subject: "Password Reset",
+      text: link,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email sent: " + info.response);
+      }
+    });
+    console.log(link);
+  } catch (error) {}
+};
+
+//reset password
+export const resetPasswordController = async (req, res) => {
+  const { id, token } = req.params;
+  console.log(req.params);
+  const user = await userModel.findOne({ _id: id });
+  if (!user) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+  const secret = JWT_SECRET + user.password;
+  try {
+    const verify = JWT.verify(token, secret);
+    res.redirect(
+      `${process.env.API_HOST}/reset-password/${user._id}/${verify.token}`
+    );
   } catch (error) {
-    res.status(500).send({
-      success: false,
-      message: "Something went wrong",
-      error,
-    });
+    console.log(error);
+    res.json("Not Verified");
+  }
+};
+//confirm reset password
+export const confirmResetPasswordController = async (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  const user = await userModel.findOne({ _id: id });
+  if (!user) {
+    return res.json({ status: "User Not Exists!!" });
+  }
+  const secret = JWT_SECRET + user.password;
+  try {
+    const verify = JWT.verify(token, secret);
+    const encryptedPassword = await bcrypt.hash(password, 10);
+
+    await userModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          password: encryptedPassword,
+        },
+      }
+    );
+    res.redirect(`${process.env.API_HOST}/login`);
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "Something Went Wrong" });
   }
 };
 

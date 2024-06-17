@@ -7,6 +7,8 @@ import {
   getAllOrdersController,
   orderStatusController,
   getOrdersController,
+  resetPasswordController,
+  confirmResetPasswordController,
 } from "../controllers/authController.js";
 import { isAdmin, requireSignIn } from "../middlewares/authMiddleware.js";
 
@@ -20,6 +22,12 @@ router.post("/login", loginController);
 //forgot password
 router.post("/forgot-password", forgotPasswordController);
 
+//reset password
+router.get("/reset-password/:id/:token", resetPasswordController);
+
+//confirm reset password
+router.post("/reset-password/:id/:token", confirmResetPasswordController);
+
 //protect user route auth
 router.get("/user-auth", requireSignIn, (req, res) => {
   res.status(200).send({ ok: true });
@@ -32,6 +40,8 @@ router.get("/admin-auth", requireSignIn, isAdmin, (req, res) => {
 
 // //update profile
 router.put("/profile", requireSignIn, updateProfileController);
+
+//tach ra
 
 //orders
 router.get("/orders", requireSignIn, getOrdersController);

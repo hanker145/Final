@@ -1,5 +1,4 @@
 import express from "express";
-import colors from "colors";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
@@ -8,13 +7,13 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
-
 cloudinary.config({
   cloud_name: "dlbfxkof2",
   api_key: "436857447829554",
